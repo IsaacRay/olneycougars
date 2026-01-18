@@ -7,8 +7,8 @@ export async function GET(request: NextRequest) {
 
   // Get base URL for redirects
   const baseUrl = process.env.NODE_ENV === 'production'
-    ? 'https://your-production-domain.com'  // Replace with your domain
-    : (process.env.NEXTAUTH_URL || 'http://localhost:3001');
+    ? 'https://olneycougars.com'  // Replace with your domain
+    : (process.env.NEXTAUTH_URL || 'http://localhost:3000');
 
   if (!token) {
     return NextResponse.redirect(new URL('/login?error=invalid', baseUrl));
