@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
 
     // Generate magic link
     const baseUrl = process.env.NODE_ENV === 'production'
-      ? 'https://your-production-domain.com'  // Replace with your domain
+      ? 'https://olneycougars.com'  // Replace with your domain
       : (process.env.NEXTAUTH_URL || 'http://localhost:3001');
     const magicLink = `${baseUrl}/api/auth/verify?token=${token}`;
 
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
 
     // Send email with Resend
     const { error: emailError } = await resend.emails.send({
-      from: 'Olney Cougars <noreply@your-domain.com>',  // Replace with your sender
+      from: 'Olney Cougars <noreply@olneycougars.com>',  // Replace with your sender
       to: normalizedEmail,
       subject: 'Your login link',
       html: `
