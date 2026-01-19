@@ -26,3 +26,28 @@ BEGIN
   WHERE expires_at < NOW() OR used = true;
 END;
 $$ LANGUAGE plpgsql;
+
+-- SuperBowl squares table
+CREATE TABLE IF NOT EXISTS superbowl_squares (
+  id SERIAL PRIMARY KEY,
+  row_num INTEGER NOT NULL CHECK (row_num >= 0 AND row_num <= 9),
+  col_num INTEGER NOT NULL CHECK (col_num >= 0 AND col_num <= 9),
+  email TEXT NOT NULL,
+  locked BOOLEAN DEFAULT false,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(row_num, col_num)  -- One owner per square
+);
+
+CREATE INDEX IF NOT EXISTS idx_squares_email ON superbowl_squares(email);
+
+ALTER TABLE superbowl_squares DISABLE ROW LEVEL SECURITY;
+
+-- SuperBowl squares configuration (stores generated number sequences)
+CREATE TABLE IF NOT EXISTS superbowl_config (
+  id INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),  -- Only one row allowed
+  row_sequence INTEGER[] NOT NULL,  -- Random sequence 0-9 for rows
+  col_sequence INTEGER[] NOT NULL,  -- Random sequence 0-9 for columns
+  generated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE superbowl_config DISABLE ROW LEVEL SECURITY;

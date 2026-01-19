@@ -40,10 +40,9 @@ export async function logout() {
   cookieStore.delete('Auth');
 }
 
-// Check if user is admin (customize this for your app)
+// Check if user is admin
 export function isAdmin(email: string | null): boolean {
-  // Replace with your admin email(s)
-  return email === 'your-admin-email@example.com';
+  return email?.toLowerCase() === 'isaacmray1984@gmail.com';
 }
 
 // Create a magic link token
