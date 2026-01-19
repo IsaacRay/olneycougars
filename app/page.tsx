@@ -256,10 +256,11 @@ export default function Home() {
         <div className="flex justify-center">
           <div
             ref={gridRef}
-            className="relative inline-block p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl origin-top"
+            className="relative p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl origin-top"
             style={{
               transform: `scale(${gridScale})`,
               marginBottom: gridScale < 1 ? `${(gridScale - 1) * 1100}px` : 0,
+              width: 'fit-content',
             }}
           >
             {/* Watermark background with 40% opacity */}
