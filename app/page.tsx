@@ -253,16 +253,21 @@ export default function Home() {
         </div>
 
         {/* Grid with watermark background */}
-        <div className="flex justify-center">
+        <div className="w-full flex justify-center">
           <div
-            ref={gridRef}
-            className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl"
             style={{
-              transform: `scale(${gridScale})`,
-              transformOrigin: 'top center',
-              marginBottom: gridScale < 1 ? `${(gridScale - 1) * 1150}px` : 0,
+              width: `${1130 * gridScale}px`,
+              height: `${1150 * gridScale}px`,
             }}
           >
+            <div
+              ref={gridRef}
+              className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl"
+              style={{
+                transform: `scale(${gridScale})`,
+                transformOrigin: 'top left',
+              }}
+            >
             {/* Watermark background with 40% opacity */}
             <div
               className="absolute inset-0 rounded-2xl"
@@ -366,6 +371,7 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </div>
         </div>
 
         {/* Legend */}
