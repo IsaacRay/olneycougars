@@ -1,9 +1,9 @@
 import twilio from 'twilio';
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID;
-const authToken = process.env.TWILIO_AUTH_TOKEN;
-const fromNumber = process.env.TWILIO_FROM_NUMBER;
-const adminNumbers = process.env.ADMIN_PHONE_NUMBERS?.split(',') || [];
+const accountSid = process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID;
+const authToken = process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN;
+const fromNumber = process.env.NEXT_PUBLIC_TWILIO_FROM_NUMBER;
+const adminNumbers = process.env.NEXT_PUBLIC_ADMIN_PHONE_NUMBERS?.split(',') || [];
 
 const client = accountSid && authToken ? twilio(accountSid, authToken) : null;
 

@@ -52,6 +52,38 @@ export default function AdminPage() {
     }
   }, [user, isAdminUser, fetchUsers]);
 
+  const handleClearNumbers = async () => {
+    if (actionLoading) return;
+
+    const confirmed = window.confirm(
+      'Are you sure you want to clear the generated numbers? This will remove the row/column number sequences from the grid.'
+    );
+
+    if (!confirmed) return;
+
+    setActionLoading('clear-numbers');
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const res = await fetch('/api/admin/clear-numbers', {
+        method: 'POST',
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccess(data.message);
+      } else {
+        setError(data.error || 'Failed to clear numbers');
+      }
+    } catch {
+      setError('Failed to clear numbers');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   const handleRelease = async (email: string) => {
     if (actionLoading) return;
 
@@ -131,6 +163,16 @@ export default function AdminPage() {
               <div className="text-2xl font-bold text-purple-600">{lockedSquares}</div>
               <div className="text-sm text-gray-600">Squares Locked</div>
             </div>
+          </div>
+
+          <div className="mb-6">
+            <button
+              onClick={handleClearNumbers}
+              disabled={actionLoading === 'clear-numbers'}
+              className="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+            >
+              {actionLoading === 'clear-numbers' ? 'Clearing...' : 'Clear Generated Numbers'}
+            </button>
           </div>
 
           {error && (
