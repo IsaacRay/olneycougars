@@ -24,6 +24,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showHowItWorks, setShowHowItWorks] = useState(false);
 
   const userEmail = user?.email?.toLowerCase();
   const userLocked = userEmail
@@ -214,6 +215,16 @@ export default function Home() {
           </div>
         </div>
 
+        {/* How it works button */}
+        <div className="flex justify-center mb-4">
+          <button
+            onClick={() => setShowHowItWorks(true)}
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          >
+            How does this work?
+          </button>
+        </div>
+
         {/* Grid with watermark background */}
         <div className="flex justify-center">
           <div className="relative inline-block p-4 rounded-lg">
@@ -338,6 +349,81 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {/* How It Works Modal */}
+      {showHowItWorks && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold text-gray-900">How Super Bowl Squares Works</h2>
+                <button
+                  onClick={() => setShowHowItWorks(false)}
+                  className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="space-y-4 text-gray-700">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">The Basics</h3>
+                  <p>
+                    Super Bowl Squares is a fun, easy way to bet on the big game without needing to know anything about football!
+                    The game uses a 10x10 grid creating 100 squares.
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">How to Play</h3>
+                  <ol className="list-decimal list-inside space-y-2">
+                    <li>Click on any available square to select it. You can select multiple squares.</li>
+                    <li>Once you&apos;re happy with your selections, click &quot;Lock me in!&quot; to finalize your choices.</li>
+                    <li>After all 100 squares are locked in, random numbers (0-9) will be assigned to each row and column.</li>
+                  </ol>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">How Winners Are Determined</h3>
+                  <p>
+                    At the end of each quarter, look at the last digit of each team&apos;s score.
+                    The square where the row (AFC team) and column (NFC team) intersect is the winner for that quarter!
+                  </p>
+                  <p className="mt-2">
+                    <strong>Example:</strong> If the score is AFC 17, NFC 14 at the end of a quarter,
+                    find where row &quot;7&quot; and column &quot;4&quot; meet. That square wins!
+                  </p>
+                </div>
+
+                <div>
+                  <h3 className="font-semibold text-lg mb-2">Payouts</h3>
+                  <p>
+                    25% of the prize pool will be paid to the first quarter winner, 25% will be paid to the half-time winner, and 50% will be paid to the final score winner.
+                  </p>
+                </div>
+
+                <div className="bg-blue-50 p-4 rounded-lg">
+                  <h3 className="font-semibold text-lg mb-2">Tips</h3>
+                  <ul className="list-disc list-inside space-y-1">
+                    <li>Numbers are assigned randomly after all squares are filled, so every square has an equal chance!</li>
+                    <li>Some numbers (like 0, 3, 7) tend to come up more often in football scores.</li>
+                    <li>The more squares you have, the better your chances of winning.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  onClick={() => setShowHowItWorks(false)}
+                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
