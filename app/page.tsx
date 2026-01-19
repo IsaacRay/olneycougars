@@ -253,33 +253,37 @@ export default function Home() {
         </div>
 
         {/* Grid with watermark background */}
-        <div className="w-full flex justify-center">
+        <div
+          className="relative rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl mx-auto"
+          style={{
+            width: '100%',
+            maxWidth: '1160px',
+            height: `${1180 * gridScale}px`,
+            padding: gridScale < 1 ? '0' : '32px',
+          }}
+        >
+          {/* Watermark background with 40% opacity */}
           <div
+            className="absolute inset-0 rounded-2xl"
             style={{
-              width: `${1224 * gridScale}px`,
-              height: `${1180 * gridScale}px`,
+              backgroundImage: 'url(/background.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: 0.3,
             }}
+          />
+          <div
+            className="w-full flex justify-center"
+            style={{ height: `${1116 * gridScale}px` }}
           >
             <div
               ref={gridRef}
-              className="relative rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl"
+              className="relative"
               style={{
                 transform: `scale(${gridScale})`,
-                transformOrigin: 'top left',
-                width: '1160px',
-                padding: '32px',
+                transformOrigin: 'top center',
               }}
             >
-            {/* Watermark background with 40% opacity */}
-            <div
-              className="absolute inset-0 rounded-2xl"
-              style={{
-                backgroundImage: 'url(/background.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                opacity: 0.3,
-              }}
-            />
             {/* Grid with headers */}
             <div className="relative">
               {/* NFC logo and column headers (top) */}
