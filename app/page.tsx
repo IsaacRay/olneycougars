@@ -172,34 +172,38 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8 px-4">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 py-8 px-4">
       <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-lg shadow p-6 mb-6">
+        {/* Header Card */}
+        <div className="bg-white/10 backdrop-blur-lg rounded-2xl shadow-2xl p-6 mb-6 border border-white/20">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-2xl font-bold text-gray-900">2026 Olney Cougars SuperBowl Squares Fundraiser</h1>
+            <h1 className="text-2xl md:text-3xl font-extrabold bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 bg-clip-text text-transparent">
+              2026 Olney Cougars SuperBowl Squares Fundraiser
+            </h1>
             <button
               onClick={logout}
-              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+              className="px-4 py-2 bg-red-500/80 text-white rounded-full hover:bg-red-600 transition-all duration-300 hover:scale-105 shadow-lg"
             >
               Logout
             </button>
           </div>
-          <p className="text-gray-600 mb-4">
+          <p className="text-gray-300 mb-4">
             Click on empty squares to select them. Click your own squares to deselect.
           </p>
 
           {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-4 backdrop-blur">
               {error}
             </div>
           )}
 
           <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-600">
-              <span className="font-medium">Your squares:</span> {userSquareCount}
+            <div className="text-sm text-gray-300">
+              <span className="font-semibold text-white">Your squares:</span>{' '}
+              <span className="text-xl font-bold text-yellow-400">{userSquareCount}</span>
               {userLocked && (
-                <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800">
-                  Locked
+                <span className="ml-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">
+                  Locked In
                 </span>
               )}
             </div>
@@ -207,7 +211,7 @@ export default function Home() {
               <button
                 onClick={handleLockIn}
                 disabled={userSquareCount === 0 || actionLoading}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+                className="px-6 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold rounded-full hover:from-emerald-600 hover:to-green-700 transition-all duration-300 hover:scale-105 shadow-lg shadow-emerald-500/30 disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:shadow-none"
               >
                 {actionLoading ? 'Processing...' : 'Lock me in!'}
               </button>
@@ -216,10 +220,10 @@ export default function Home() {
         </div>
 
         {/* How it works button */}
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-6">
           <button
             onClick={() => setShowHowItWorks(true)}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+            className="px-6 py-3 bg-white/10 backdrop-blur text-white font-semibold rounded-full hover:bg-white/20 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-105"
           >
             How does this work?
           </button>
@@ -227,15 +231,15 @@ export default function Home() {
 
         {/* Grid with watermark background */}
         <div className="flex justify-center">
-          <div className="relative inline-block p-4 rounded-lg">
+          <div className="relative inline-block p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl">
             {/* Watermark background with 40% opacity */}
             <div
-              className="absolute inset-0 rounded-lg"
+              className="absolute inset-0 rounded-2xl"
               style={{
                 backgroundImage: 'url(/background.png)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
-                opacity: 0.4,
+                opacity: 0.3,
               }}
             />
             {/* Grid with headers */}
@@ -250,7 +254,7 @@ export default function Home() {
                       {config.col_sequence.map((num, i) => (
                         <div
                           key={i}
-                          className="w-24 h-8 flex items-center justify-center font-bold text-xl text-gray-800"
+                          className="w-24 h-8 flex items-center justify-center font-bold text-xl text-yellow-400 drop-shadow-lg"
                         >
                           {num}
                         </div>
@@ -273,7 +277,7 @@ export default function Home() {
                     <div key={row} className="flex">
                       {/* Row header (left) */}
                       {config && (
-                        <div className="w-8 h-24 flex items-center justify-center font-bold text-xl text-gray-800">
+                        <div className="w-8 h-24 flex items-center justify-center font-bold text-xl text-yellow-400 drop-shadow-lg">
                           {config.row_sequence[row]}
                         </div>
                       )}
@@ -286,21 +290,21 @@ export default function Home() {
                     const isTaken = !!square;
                     const isLocked = square?.locked;
 
-                    let bgColor = 'bg-transparent hover:bg-white/30';
+                    let bgColor = 'bg-white/5 hover:bg-white/20';
                     let cursor = 'cursor-pointer';
-                    let textColor = 'text-gray-600';
+                    let textColor = 'text-gray-300';
 
                     if (isTaken) {
                       if (isOwn) {
-                        bgColor = 'bg-green-500';
+                        bgColor = 'bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/30';
                         textColor = 'text-white';
                         if (userLocked) {
                           cursor = 'cursor-default';
                         } else {
-                          bgColor += ' hover:bg-green-600';
+                          bgColor += ' hover:from-emerald-600 hover:to-green-700';
                         }
                       } else {
-                        bgColor = 'bg-red-400';
+                        bgColor = 'bg-gradient-to-br from-red-500 to-rose-600 shadow-lg shadow-red-500/30';
                         textColor = 'text-white';
                         cursor = 'cursor-not-allowed';
                       }
@@ -312,11 +316,11 @@ export default function Home() {
                       <div
                         key={col}
                         onClick={() => handleSquareClick(row, col)}
-                        className={`w-24 h-24 border border-gray-400 flex flex-col items-center justify-center ${bgColor} ${cursor} ${textColor} text-xs transition-colors`}
+                        className={`w-24 h-24 border border-white/20 flex flex-col items-center justify-center ${bgColor} ${cursor} ${textColor} text-xs transition-all duration-200`}
                       >
                         {isTaken && (
                           <>
-                            <span className="font-medium">
+                            <span className="font-semibold">
                               {isOwn ? 'You' : truncateEmail(square.email)}
                             </span>
                             {isLocked && <span className="text-[10px]">locked</span>}
@@ -334,40 +338,40 @@ export default function Home() {
         </div>
 
         {/* Legend */}
-        <div className="mt-4 flex justify-center gap-4 text-sm text-gray-600">
+        <div className="mt-6 flex justify-center gap-6 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-white/50 border border-gray-300"></div>
-            <span>Available</span>
+            <div className="w-5 h-5 bg-white/10 border border-white/20 rounded"></div>
+            <span className="text-gray-300">Available</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-green-500"></div>
-            <span>Your selection</span>
+            <div className="w-5 h-5 bg-gradient-to-br from-emerald-500 to-green-600 rounded shadow-md"></div>
+            <span className="text-gray-300">Your selection</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 bg-red-400"></div>
-            <span>Taken</span>
+            <div className="w-5 h-5 bg-gradient-to-br from-red-500 to-rose-600 rounded shadow-md"></div>
+            <span className="text-gray-300">Taken</span>
           </div>
         </div>
       </div>
 
       {/* How It Works Modal */}
       {showHowItWorks && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-white/10">
             <div className="p-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-900">How Super Bowl Squares Works</h2>
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">How Super Bowl Squares Works</h2>
                 <button
                   onClick={() => setShowHowItWorks(false)}
-                  className="text-gray-500 hover:text-gray-700 text-2xl leading-none"
+                  className="text-gray-400 hover:text-white text-2xl leading-none transition-colors"
                 >
                   &times;
                 </button>
               </div>
 
-              <div className="space-y-4 text-gray-700">
+              <div className="space-y-4 text-gray-300">
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">The Basics</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">The Basics</h3>
                   <p>
                     Super Bowl Squares is a fun, easy way to bet on the big game without needing to know anything about football!
                     The game uses a 10x10 grid creating 100 squares.
@@ -375,7 +379,7 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">How to Play</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">How to Play</h3>
                   <ol className="list-decimal list-inside space-y-2">
                     <li>Click on any available square to select it. You can select multiple squares.</li>
                     <li>Once you&apos;re happy with your selections, click &quot;Lock me in!&quot; to finalize your choices.</li>
@@ -384,26 +388,26 @@ export default function Home() {
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">How Winners Are Determined</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">How Winners Are Determined</h3>
                   <p>
                     At the end of each quarter, look at the last digit of each team&apos;s score.
                     The square where the row (AFC team) and column (NFC team) intersect is the winner for that quarter!
                   </p>
                   <p className="mt-2">
-                    <strong>Example:</strong> If the score is AFC 17, NFC 14 at the end of a quarter,
+                    <span className="text-yellow-400 font-semibold">Example:</span> If the score is AFC 17, NFC 14 at the end of a quarter,
                     find where row &quot;7&quot; and column &quot;4&quot; meet. That square wins!
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="font-semibold text-lg mb-2">Payouts</h3>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Payouts</h3>
                   <p>
                     25% of the prize pool will be paid to the first quarter winner, 25% will be paid to the half-time winner, and 50% will be paid to the final score winner.
                   </p>
                 </div>
 
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <h3 className="font-semibold text-lg mb-2">Tips</h3>
+                <div className="bg-white/10 p-4 rounded-xl border border-white/10">
+                  <h3 className="font-semibold text-lg mb-2 text-yellow-400">Tips</h3>
                   <ul className="list-disc list-inside space-y-1">
                     <li>Numbers are assigned randomly after all squares are filled, so every square has an equal chance!</li>
                     <li>Some numbers (like 0, 3, 7) tend to come up more often in football scores.</li>
@@ -415,7 +419,7 @@ export default function Home() {
               <div className="mt-6">
                 <button
                   onClick={() => setShowHowItWorks(false)}
-                  className="w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                  className="w-full px-4 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-full hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/30"
                 >
                   Got it!
                 </button>
