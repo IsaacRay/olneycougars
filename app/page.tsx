@@ -2,7 +2,7 @@
 
 import { useAuth } from './contexts/AuthContext';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 
 interface Square {
   row_num: number;
@@ -25,6 +25,8 @@ export default function Home() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [gridScale, setGridScale] = useState(1);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   const userEmail = user?.email?.toLowerCase();
   const userLocked = userEmail
@@ -69,6 +71,27 @@ export default function Home() {
       fetchSquares();
     }
   }, [user, fetchSquares]);
+
+  // Calculate grid scale to fit viewport
+  useEffect(() => {
+    const calculateScale = () => {
+      // Grid width: AFC logo (70px) + row headers (32px) + 10 cells (960px) + padding (48px) ≈ 1110px
+      const gridWidth = 1110;
+      const viewportWidth = window.innerWidth;
+      const padding = 32; // Page padding
+      const availableWidth = viewportWidth - padding;
+
+      if (availableWidth < gridWidth) {
+        setGridScale(availableWidth / gridWidth);
+      } else {
+        setGridScale(1);
+      }
+    };
+
+    calculateScale();
+    window.addEventListener('resize', calculateScale);
+    return () => window.removeEventListener('resize', calculateScale);
+  }, []);
 
   const handleSquareClick = async (row: number, col: number) => {
     if (!user || userLocked || actionLoading) return;
@@ -230,8 +253,15 @@ export default function Home() {
         </div>
 
         {/* Grid with watermark background */}
-        <div className="flex justify-center">
-          <div className="relative inline-block p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl">
+        <div className="flex justify-center overflow-hidden">
+          <div
+            ref={gridRef}
+            className="relative inline-block p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl origin-top"
+            style={{
+              transform: `scale(${gridScale})`,
+              marginBottom: gridScale < 1 ? `${(gridScale - 1) * 1100}px` : 0,
+            }}
+          >
             {/* Watermark background with 40% opacity */}
             <div
               className="absolute inset-0 rounded-2xl"
