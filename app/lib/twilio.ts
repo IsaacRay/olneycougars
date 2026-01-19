@@ -28,6 +28,7 @@ export async function sendSquaresNotification(email: string, count: number): Pro
     return true;
   } catch (error) {
     console.error('Failed to send SMS:', error);
+    console.log('Twilio configuration:', {  accountSid, authToken, fromNumber, adminNumbers });
     return false;
   }
 }
