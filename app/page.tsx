@@ -256,7 +256,7 @@ export default function Home() {
         <div className="w-full flex justify-center">
           <div
             style={{
-              width: `${1178 * gridScale}px`,
+              width: `${1224 * gridScale}px`,
               height: `${1180 * gridScale}px`,
             }}
           >
@@ -266,7 +266,7 @@ export default function Home() {
               style={{
                 transform: `scale(${gridScale})`,
                 transformOrigin: 'top left',
-                width: '1114px',
+                width: '1160px',
                 padding: '32px',
               }}
             >
