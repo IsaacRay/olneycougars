@@ -256,16 +256,18 @@ export default function Home() {
         <div className="w-full flex justify-center">
           <div
             style={{
-              width: `${1130 * gridScale}px`,
-              height: `${1150 * gridScale}px`,
+              width: `${1178 * gridScale}px`,
+              height: `${1180 * gridScale}px`,
             }}
           >
             <div
               ref={gridRef}
-              className="relative p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl"
+              className="relative rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl"
               style={{
                 transform: `scale(${gridScale})`,
                 transformOrigin: 'top left',
+                width: '1114px',
+                padding: '32px',
               }}
             >
             {/* Watermark background with 40% opacity */}
@@ -279,7 +281,7 @@ export default function Home() {
               }}
             />
             {/* Grid with headers */}
-            <div className="relative inline-block">
+            <div className="relative">
               {/* NFC logo and column headers (top) */}
               <div className="flex">
                 <div style={{ width: config ? '102px' : '70px' }} className="h-16 flex-shrink-0" /> {/* Empty corner - matches AFC logo + row headers */}
