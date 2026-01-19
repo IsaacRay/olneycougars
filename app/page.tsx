@@ -25,6 +25,7 @@ export default function Home() {
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
+  const [showHowToPay, setShowHowToPay] = useState(false);
   const [gridScale, setGridScale] = useState(1);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -242,13 +243,19 @@ export default function Home() {
           </div>
         </div>
 
-        {/* How it works button */}
-        <div className="flex justify-center mb-6">
+        {/* How it works and How to pay buttons */}
+        <div className="flex justify-center gap-4 mb-6">
           <button
             onClick={() => setShowHowItWorks(true)}
             className="px-6 py-3 bg-white/10 backdrop-blur text-white font-semibold rounded-full hover:bg-white/20 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-105"
           >
             How does this work?
+          </button>
+          <button
+            onClick={() => setShowHowToPay(true)}
+            className="px-6 py-3 bg-white/10 backdrop-blur text-white font-semibold rounded-full hover:bg-white/20 transition-all duration-300 border border-white/30 hover:border-white/50 hover:scale-105"
+          >
+            How do I pay?
           </button>
         </div>
 
@@ -458,6 +465,65 @@ export default function Home() {
               <div className="mt-6">
                 <button
                   onClick={() => setShowHowItWorks(false)}
+                  className="w-full px-4 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-full hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/30"
+                >
+                  Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* How To Pay Modal */}
+      {showHowToPay && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto border border-white/10">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">How to Pay</h2>
+                <button
+                  onClick={() => setShowHowToPay(false)}
+                  className="text-gray-400 hover:text-white text-2xl leading-none transition-colors"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="space-y-4 text-gray-300">
+                <div>
+                  <h3 className="font-semibold text-lg mb-2 text-white">Payment via Venmo</h3>
+                  <p className="mb-4">
+                    Each square costs <span className="text-yellow-400 font-bold">$10</span>. Please send your payment via Venmo after selecting your squares.
+                  </p>
+                </div>
+
+                <div className="bg-white/10 p-4 rounded-xl border border-white/10">
+                  <h3 className="font-semibold text-lg mb-2 text-yellow-400">Instructions</h3>
+                  <ol className="list-decimal list-inside space-y-2">
+                  <a href="https://venmo.com/u/Isaac-Ray-2" className="text-blue-400 underline mb-2 block" target="_blank" rel="noopener noreferrer">Direct Venmo Link</a>
+                  </ol>
+                  <br/>
+                  OR
+                  <br/>
+                  <br/>
+                  <ol className="list-decimal list-inside space-y-2">
+                    <li>Open Venmo on your phone</li>
+                    <li>Search for <span className="text-white font-semibold">@Isaac-Ray-2</span></li>
+                    <li>Send $10 for each square you selected</li>
+                    <li>In the note, include your email address</li>
+                  </ol>
+                </div>
+
+                <div className="text-center py-4">
+                  <p className="text-sm text-gray-400 mb-2">Venmo Username</p>
+                  <p className="text-2xl font-bold text-white">@Isaac-Ray-2</p>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <button
+                  onClick={() => setShowHowToPay(false)}
                   className="w-full px-4 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-full hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/30"
                 >
                   Got it!
