@@ -253,7 +253,7 @@ export default function Home() {
         </div>
 
         {/* Grid with watermark background */}
-        <div className="flex justify-center overflow-hidden">
+        <div className="flex justify-center">
           <div
             ref={gridRef}
             className="relative inline-block p-6 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 shadow-2xl origin-top"
@@ -276,7 +276,7 @@ export default function Home() {
             <div className="relative inline-block">
               {/* NFC logo and column headers (top) */}
               <div className="flex">
-                <div className="w-16 h-16" /> {/* Empty corner */}
+                <div style={{ width: config ? '102px' : '70px' }} className="h-16 flex-shrink-0" /> {/* Empty corner - matches AFC logo + row headers */}
                 <div className="flex flex-col">
                   <img src="/NFC.png" alt="NFC" className="h-12 object-contain" style={{ width: `${10 * 96}px` }} />
                   {config && (
@@ -297,8 +297,8 @@ export default function Home() {
               {/* AFC logo and rows */}
               <div className="flex">
                 {/* AFC logo (left side) */}
-                <div className="flex flex-col">
-                  <img src="/AFC.png" alt="AFC" className="object-contain" style={{ width: '70px', height: `${10 * 96}px` }} />
+                <div className="flex flex-col flex-shrink-0">
+                  <img src="/AFC.png" alt="AFC" className="object-contain flex-shrink-0" style={{ width: '70px', height: `${10 * 96}px` }} />
                 </div>
 
                 {/* Number headers and grid */}
