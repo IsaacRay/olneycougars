@@ -26,6 +26,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [showHowItWorks, setShowHowItWorks] = useState(false);
   const [showHowToPay, setShowHowToPay] = useState(false);
+  const [showLockConfirm, setShowLockConfirm] = useState(false);
   const [gridScale, setGridScale] = useState(1);
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -148,9 +149,13 @@ export default function Home() {
     }
   };
 
-  const handleLockIn = async () => {
+  const handleLockIn = () => {
     if (!user || userLocked || userSquareCount === 0 || actionLoading) return;
+    setShowLockConfirm(true);
+  };
 
+  const confirmLockIn = async () => {
+    setShowLockConfirm(false);
     setActionLoading(true);
     setError(null);
 
@@ -212,8 +217,9 @@ export default function Home() {
             </button>
           </div>
           <p className="text-gray-300 mb-4">
-            Click on empty squares to select them. Click your own squares to deselect.
+            Click on empty squares to select them. Click your own squares to deselect. Once you are happy with your selection, lock it in.
           </p>
+          <p className="text-gray-300 mb-4"><h2> Note: Once you've locked in, you will no longer be able to edit or add additional squares!</h2></p>
 
           {error && (
             <div className="bg-red-500/20 border border-red-500/50 text-red-200 px-4 py-3 rounded-xl mb-4 backdrop-blur">
@@ -221,15 +227,29 @@ export default function Home() {
             </div>
           )}
 
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-300">
-              <span className="font-semibold text-white">Your squares:</span>{' '}
-              <span className="text-xl font-bold text-yellow-400">{userSquareCount}</span>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div className="text-sm text-gray-300 flex items-center gap-4">
+              <div>
+                <span className="font-semibold text-white">Your squares:</span>{' '}
+                <span className="text-xl font-bold text-yellow-400">{userSquareCount}</span>
+              </div>
+              <div>
+                <span className="font-semibold text-white">Cost:</span>{' '}
+                <span className="text-xl font-bold text-emerald-400">
+                  ${Math.floor(userSquareCount / 4) * 50 + (userSquareCount % 4) * 15}
+                </span>
+              </div>
               {userLocked && (
-                <span className="ml-2 inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/30 text-emerald-300 border border-emerald-500/50">
                   Locked In
                 </span>
               )}
+            </div>
+            <div className="text-sm text-gray-300">
+              <span className="font-semibold text-white">Need Help?</span>{' '}
+              <a href="sms:518-469-0834" className="text-yellow-400 hover:text-yellow-300 transition-colors">
+                Text 518-469-0834
+              </a>
             </div>
             {!userLocked && (
               <button
@@ -494,14 +514,14 @@ export default function Home() {
                 <div>
                   <h3 className="font-semibold text-lg mb-2 text-white">Payment via Venmo</h3>
                   <p className="mb-4">
-                    Each square costs <span className="text-yellow-400 font-bold">$10</span>. Please send your payment via Venmo after selecting your squares.
+                    Each square costs <span className="text-yellow-400 font-bold">$15</span>, or four for <span className="text-yellow-400 font-bold">$50</span> . Please send your payment via Venmo after selecting your squares.
                   </p>
                 </div>
 
                 <div className="bg-white/10 p-4 rounded-xl border border-white/10">
                   <h3 className="font-semibold text-lg mb-2 text-yellow-400">Instructions</h3>
                   <ol className="list-decimal list-inside space-y-2">
-                  <a href="https://venmo.com/u/Isaac-Ray-2" className="text-blue-400 underline mb-2 block" target="_blank" rel="noopener noreferrer">Direct Venmo Link</a>
+                  <a href="https://venmo.com/u/kmfriedman321" className="text-blue-400 underline mb-2 block" target="_blank" rel="noopener noreferrer">Direct Venmo Link</a>
                   </ol>
                   <br/>
                   OR
@@ -509,15 +529,15 @@ export default function Home() {
                   <br/>
                   <ol className="list-decimal list-inside space-y-2">
                     <li>Open Venmo on your phone</li>
-                    <li>Search for <span className="text-white font-semibold">@Isaac-Ray-2</span></li>
-                    <li>Send $10 for each square you selected</li>
+                    <li>Search for <span className="text-white font-semibold">@kmfriedman321</span></li>
+                    <li>Send the total for the number of squares you selected</li>
                     <li>In the note, include your email address</li>
                   </ol>
                 </div>
 
                 <div className="text-center py-4">
                   <p className="text-sm text-gray-400 mb-2">Venmo Username</p>
-                  <p className="text-2xl font-bold text-white">@Isaac-Ray-2</p>
+                  <p className="text-2xl font-bold text-white">@kmfriedman321</p>
                 </div>
               </div>
 
@@ -527,6 +547,54 @@ export default function Home() {
                   className="w-full px-4 py-3 bg-gradient-to-r from-yellow-500 to-orange-500 text-white font-bold rounded-full hover:from-yellow-600 hover:to-orange-600 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-orange-500/30"
                 >
                   Got it!
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Lock Confirmation Modal */}
+      {showLockConfirm && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl max-w-md w-full border border-white/10">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-500 bg-clip-text text-transparent">Are you sure?</h2>
+                <button
+                  onClick={() => setShowLockConfirm(false)}
+                  className="text-gray-400 hover:text-white text-2xl leading-none transition-colors"
+                >
+                  &times;
+                </button>
+              </div>
+
+              <div className="space-y-4 text-gray-300">
+                <p>
+                  You are about to lock in <span className="text-yellow-400 font-bold">{userSquareCount} square{userSquareCount !== 1 ? 's' : ''}</span>.
+                </p>
+                <div className="bg-red-500/20 border border-red-500/50 rounded-xl p-4">
+                  <p className="text-red-200 font-semibold">
+                    Once locked, you will NOT be able to add, remove, or edit any of your squares.
+                  </p>
+                </div>
+                <p>
+                  Make sure you have selected all the squares you want before confirming.
+                </p>
+              </div>
+
+              <div className="mt-6 flex gap-3">
+                <button
+                  onClick={() => setShowLockConfirm(false)}
+                  className="flex-1 px-4 py-3 bg-gray-600 text-white font-bold rounded-full hover:bg-gray-700 transition-all duration-300"
+                >
+                  Go Back
+                </button>
+                <button
+                  onClick={confirmLockIn}
+                  className="flex-1 px-4 py-3 bg-gradient-to-r from-emerald-500 to-green-600 text-white font-bold rounded-full hover:from-emerald-600 hover:to-green-700 transition-all duration-300 hover:scale-[1.02] shadow-lg shadow-emerald-500/30"
+                >
+                  Lock Me In!
                 </button>
               </div>
             </div>

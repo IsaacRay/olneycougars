@@ -119,6 +119,41 @@ export default function AdminPage() {
     }
   };
 
+  const handleLockUser = async (email: string) => {
+    if (actionLoading) return;
+
+    const confirmed = window.confirm(
+      `Are you sure you want to lock all squares for ${email}? This will finalize their selections.`
+    );
+
+    if (!confirmed) return;
+
+    setActionLoading(`lock-${email}`);
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const res = await fetch('/api/admin/lock-user', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccess(data.message);
+        await fetchUsers();
+      } else {
+        setError(data.error || 'Failed to lock squares');
+      }
+    } catch {
+      setError('Failed to lock squares');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -215,13 +250,24 @@ export default function AdminPage() {
                       )}
                     </div>
                   </div>
-                  <button
-                    onClick={() => handleRelease(u.email)}
-                    disabled={actionLoading === u.email}
-                    className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
-                  >
-                    {actionLoading === u.email ? 'Releasing...' : 'Release Squares'}
-                  </button>
+                  <div className="flex gap-2">
+                    {!u.locked && (
+                      <button
+                        onClick={() => handleLockUser(u.email)}
+                        disabled={actionLoading === `lock-${u.email}`}
+                        className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                      >
+                        {actionLoading === `lock-${u.email}` ? 'Locking...' : 'Lock Squares'}
+                      </button>
+                    )}
+                    <button
+                      onClick={() => handleRelease(u.email)}
+                      disabled={actionLoading === u.email}
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed text-sm"
+                    >
+                      {actionLoading === u.email ? 'Releasing...' : 'Release Squares'}
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
