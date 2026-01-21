@@ -16,11 +16,23 @@ interface Config {
   col_sequence: number[];
 }
 
+interface Scores {
+  q1_afc: number | null;
+  q1_nfc: number | null;
+  q2_afc: number | null;
+  q2_nfc: number | null;
+  q3_afc: number | null;
+  q3_nfc: number | null;
+  q4_afc: number | null;
+  q4_nfc: number | null;
+}
+
 export default function Home() {
   const { user, loading: authLoading, logout } = useAuth();
   const router = useRouter();
   const [squares, setSquares] = useState<Map<string, Square>>(new Map());
   const [config, setConfig] = useState<Config | null>(null);
+  const [scores, setScores] = useState<Scores | null>(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +63,9 @@ export default function Home() {
         setSquares(map);
         if (data.config) {
           setConfig(data.config);
+        }
+        if (data.scores) {
+          setScores(data.scores);
         }
       } else {
         setError(data.error || 'Failed to load squares');
@@ -200,6 +215,28 @@ export default function Home() {
     return email.substring(0, 8) + '...';
   };
 
+  // Helper function to find winner for a given score pair
+  const getWinner = (afcScore: number | null, nfcScore: number | null): string | null => {
+    if (afcScore === null || nfcScore === null || !config) return null;
+
+    const afcDigit = afcScore % 10;
+    const nfcDigit = nfcScore % 10;
+
+    const row = config.row_sequence.findIndex((n) => n === afcDigit);
+    const col = config.col_sequence.findIndex((n) => n === nfcDigit);
+
+    if (row === -1 || col === -1) return null;
+
+    const square = squares.get(`${row}-${col}`);
+    return square?.email || null;
+  };
+
+  // Calculate winners for display
+  const q1Winner = scores ? getWinner(scores.q1_afc, scores.q1_nfc) : null;
+  const q2Winner = scores ? getWinner(scores.q2_afc, scores.q2_nfc) : null;
+  const q4Winner = scores ? getWinner(scores.q4_afc, scores.q4_nfc) : null;
+  const hasWinners = q1Winner || q2Winner || q4Winner;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-red-900 to-slate-900 py-8 px-4">
       <div className="max-w-6xl mx-auto">
@@ -262,6 +299,35 @@ export default function Home() {
             )}
           </div>
         </div>
+
+        {/* Winners Section */}
+        {hasWinners && config && (
+          <div className="bg-gradient-to-r from-yellow-500/20 via-amber-500/20 to-yellow-500/20 backdrop-blur-lg rounded-2xl shadow-2xl p-6 mb-6 border border-yellow-500/30">
+            <h2 className="text-xl md:text-2xl font-extrabold bg-gradient-to-r from-yellow-400 via-amber-400 to-yellow-400 bg-clip-text text-transparent mb-4 flex items-center gap-2">
+              Winners
+            </h2>
+            <div className="space-y-3">
+              {q1Winner && scores && (
+                <div className="flex justify-between items-center bg-white/10 rounded-xl px-4 py-3">
+                  <span className="text-gray-300 font-semibold">Q1 (End of 1st) - AFC {scores.q1_afc}, NFC {scores.q1_nfc}</span>
+                  <span className="text-yellow-400 font-bold">{q1Winner}</span>
+                </div>
+              )}
+              {q2Winner && scores && (
+                <div className="flex justify-between items-center bg-white/10 rounded-xl px-4 py-3">
+                  <span className="text-gray-300 font-semibold">Q2 (Halftime) - AFC {scores.q2_afc}, NFC {scores.q2_nfc}</span>
+                  <span className="text-yellow-400 font-bold">{q2Winner}</span>
+                </div>
+              )}
+              {q4Winner && scores && (
+                <div className="flex justify-between items-center bg-white/10 rounded-xl px-4 py-3">
+                  <span className="text-gray-300 font-semibold">Q4 (Final) - AFC {scores.q4_afc}, NFC {scores.q4_nfc}</span>
+                  <span className="text-yellow-400 font-bold">{q4Winner}</span>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* How it works and How to pay buttons */}
         <div className="flex justify-center gap-4 mb-6">
@@ -468,7 +534,9 @@ export default function Home() {
                 <div>
                   <h3 className="font-semibold text-lg mb-2 text-white">Payouts</h3>
                   <p>
-                    25% of the prize pool will be paid to the first quarter winner, 25% will be paid to the half-time winner, and 50% will be paid to the final score winner.
+                    Quarter 1 winner: $100<br/>
+                    Halftime winner: $150<br/>
+                    Final Score: $250<br/>
                   </p>
                 </div>
 

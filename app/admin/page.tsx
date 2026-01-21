@@ -10,6 +10,17 @@ interface UserSquares {
   locked: boolean;
 }
 
+interface Scores {
+  q1_afc: number | null;
+  q1_nfc: number | null;
+  q2_afc: number | null;
+  q2_nfc: number | null;
+  q3_afc: number | null;
+  q3_nfc: number | null;
+  q4_afc: number | null;
+  q4_nfc: number | null;
+}
+
 export default function AdminPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
@@ -18,6 +29,16 @@ export default function AdminPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [scores, setScores] = useState<Scores>({
+    q1_afc: null,
+    q1_nfc: null,
+    q2_afc: null,
+    q2_nfc: null,
+    q3_afc: null,
+    q3_nfc: null,
+    q4_afc: null,
+    q4_nfc: null,
+  });
 
   const isAdminUser = user?.email?.toLowerCase() === 'isaacmray1984@gmail.com';
 
@@ -38,6 +59,19 @@ export default function AdminPage() {
     }
   }, []);
 
+  const fetchScores = useCallback(async () => {
+    try {
+      const res = await fetch('/api/admin/scores');
+      const data = await res.json();
+
+      if (res.ok && data.scores) {
+        setScores(data.scores);
+      }
+    } catch {
+      // Silently fail - scores may not exist yet
+    }
+  }, []);
+
   useEffect(() => {
     if (!authLoading && !user) {
       router.push('/login');
@@ -49,8 +83,9 @@ export default function AdminPage() {
   useEffect(() => {
     if (user && isAdminUser) {
       fetchUsers();
+      fetchScores();
     }
-  }, [user, isAdminUser, fetchUsers]);
+  }, [user, isAdminUser, fetchUsers, fetchScores]);
 
   const handleClearNumbers = async () => {
     if (actionLoading) return;
@@ -154,6 +189,44 @@ export default function AdminPage() {
     }
   };
 
+  const handleScoreChange = (field: keyof Scores, value: string) => {
+    setScores((prev) => ({
+      ...prev,
+      [field]: value === '' ? null : parseInt(value, 10),
+    }));
+  };
+
+  const handleSaveScores = async () => {
+    if (actionLoading) return;
+
+    setActionLoading('save-scores');
+    setError(null);
+    setSuccess(null);
+
+    try {
+      const res = await fetch('/api/admin/scores', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scores),
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        setSuccess('Scores saved successfully');
+        if (data.scores) {
+          setScores(data.scores);
+        }
+      } else {
+        setError(data.error || 'Failed to save scores');
+      }
+    } catch {
+      setError('Failed to save scores');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
   if (authLoading || loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -208,6 +281,103 @@ export default function AdminPage() {
             >
               {actionLoading === 'clear-numbers' ? 'Clearing...' : 'Clear Generated Numbers'}
             </button>
+          </div>
+
+          {/* Score Entry Section */}
+          <div className="mb-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Enter Scores</h3>
+            <div className="space-y-3">
+              <div className="grid grid-cols-3 gap-4 items-center">
+                <div className="font-medium text-gray-700"></div>
+                <div className="text-center font-semibold text-gray-700">AFC</div>
+                <div className="text-center font-semibold text-gray-700">NFC</div>
+              </div>
+              <div className="grid grid-cols-3 gap-4 items-center">
+                <div className="font-medium text-gray-700">Q1</div>
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q1_afc ?? ''}
+                  onChange={(e) => handleScoreChange('q1_afc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q1_nfc ?? ''}
+                  onChange={(e) => handleScoreChange('q1_nfc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-4 items-center">
+                <div className="font-medium text-gray-700">Q2 <span className="text-sm text-gray-500">(Halftime)</span></div>
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q2_afc ?? ''}
+                  onChange={(e) => handleScoreChange('q2_afc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q2_nfc ?? ''}
+                  onChange={(e) => handleScoreChange('q2_nfc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-4 items-center">
+                <div className="font-medium text-gray-700">Q3</div>
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q3_afc ?? ''}
+                  onChange={(e) => handleScoreChange('q3_afc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q3_nfc ?? ''}
+                  onChange={(e) => handleScoreChange('q3_nfc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+              </div>
+              <div className="grid grid-cols-3 gap-4 items-center">
+                <div className="font-medium text-gray-700">Q4 <span className="text-sm text-gray-500">(Final)</span></div>
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q4_afc ?? ''}
+                  onChange={(e) => handleScoreChange('q4_afc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+                <input
+                  type="number"
+                  min="0"
+                  value={scores.q4_nfc ?? ''}
+                  onChange={(e) => handleScoreChange('q4_nfc', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900"
+                  placeholder="0"
+                />
+              </div>
+            </div>
+            <div className="mt-4">
+              <button
+                onClick={handleSaveScores}
+                disabled={actionLoading === 'save-scores'}
+                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+              >
+                {actionLoading === 'save-scores' ? 'Saving...' : 'Save Scores'}
+              </button>
+            </div>
           </div>
 
           {error && (

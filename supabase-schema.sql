@@ -51,3 +51,19 @@ CREATE TABLE IF NOT EXISTS superbowl_config (
 );
 
 ALTER TABLE superbowl_config DISABLE ROW LEVEL SECURITY;
+
+-- SuperBowl scores table (stores game scores for each quarter)
+CREATE TABLE IF NOT EXISTS superbowl_scores (
+  id INTEGER PRIMARY KEY DEFAULT 1 CHECK (id = 1),  -- Only one row allowed
+  q1_afc INTEGER,
+  q1_nfc INTEGER,
+  q2_afc INTEGER,
+  q2_nfc INTEGER,
+  q3_afc INTEGER,
+  q3_nfc INTEGER,
+  q4_afc INTEGER,
+  q4_nfc INTEGER,
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+ALTER TABLE superbowl_scores DISABLE ROW LEVEL SECURITY;

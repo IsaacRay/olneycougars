@@ -5,9 +5,10 @@ import { createClient } from '../../utils/supabase/server';
 export async function GET() {
   const supabase = await createClient();
 
-  const [squaresResult, configResult] = await Promise.all([
+  const [squaresResult, configResult, scoresResult] = await Promise.all([
     supabase.from('superbowl_squares').select('row_num, col_num, email, locked'),
     supabase.from('superbowl_config').select('row_sequence, col_sequence').single(),
+    supabase.from('superbowl_scores').select('*').single(),
   ]);
 
   if (squaresResult.error) {
@@ -18,6 +19,7 @@ export async function GET() {
   return NextResponse.json({
     squares: squaresResult.data,
     config: configResult.data || null,
+    scores: scoresResult.data || null,
   });
 }
 
