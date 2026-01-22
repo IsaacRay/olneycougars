@@ -40,7 +40,8 @@ export default function AdminPage() {
     q4_nfc: null,
   });
 
-  const isAdminUser = user?.email?.toLowerCase() === 'isaacmray1984@gmail.com';
+  const adminEmails = ['isaacmray1984@gmail.com', 'kmfriedman321@gmail.com'];
+  const isAdminUser = user?.email ? adminEmails.includes(user.email.toLowerCase()) : false;
 
   const fetchUsers = useCallback(async () => {
     try {

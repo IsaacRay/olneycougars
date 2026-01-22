@@ -41,8 +41,14 @@ export async function logout() {
 }
 
 // Check if user is admin
+const ADMIN_EMAILS = [
+  'isaacmray1984@gmail.com',
+  'kmfriedman321@gmail.com',
+];
+
 export function isAdmin(email: string | null): boolean {
-  return email?.toLowerCase() === 'isaacmray1984@gmail.com';
+  if (!email) return false;
+  return ADMIN_EMAILS.includes(email.toLowerCase());
 }
 
 // Create a magic link token
